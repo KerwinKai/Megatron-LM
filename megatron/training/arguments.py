@@ -571,6 +571,8 @@ def core_transformer_config_from_args(args, config_class=None):
         kw_args['num_query_groups'] = args.num_query_groups
     else:
         kw_args['num_query_groups'] = None
+    if args.sliding_window is not None:
+        kw_args['window_size'] = (args.sliding_window, 0)
 
     # Return config.
     return config_class(**kw_args)
@@ -1084,6 +1086,7 @@ def _add_training_args(parser):
     group.add_argument('--disable-tp-comm-split-rs', action='store_false',
                        help='Disables the Reduce-Scatter overlap with fprop GEMM.',
                        dest='tp_comm_split_rs')
+    group.add_argument('--sliding-window', type=int, default=None)
 
     return parser
 
@@ -1409,6 +1412,7 @@ def _add_data_args(parser):
                                 'SentencePieceTokenizer',
                                 'GPTSentencePieceTokenizer',
                                 'Llama2Tokenizer',
+                                'MistralTokenizer',
                                 'NullTokenizer'],
                        help='What type of tokenizer to use.')
     group.add_argument('--tokenizer-model', type=str, default=None,

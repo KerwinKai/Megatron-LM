@@ -41,6 +41,13 @@ def build_tokenizer(args):
     elif args.tokenizer_type == 'Llama2Tokenizer':
         assert args.tokenizer_model is not None
         tokenizer = _Llama2Tokenizer(args.tokenizer_model)
+    elif args.tokenizer_type == 'MistralTokenizer':
+        assert args.tokenizer_model is not None
+        from transformers import AutoTokenizer
+        tokenizer = AutoTokenizer.from_pretrained(args.tokenizer_model,
+                                                  padding_side='right',
+                                                  use_fast=False,)
+        tokenizer.pad_token_id = 0
     elif args.tokenizer_type == 'NullTokenizer':
         assert args.vocab_size is not None
         tokenizer = _NullTokenizer(args.vocab_size)
